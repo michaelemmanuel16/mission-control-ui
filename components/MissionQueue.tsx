@@ -7,10 +7,10 @@ import { Clock, User } from 'lucide-react';
 
 const COLUMNS = [
   { id: 'inbox', title: 'INBOX', color: 'border-gray-300 bg-gray-50' },
-  { id: 'assigned', title: 'ASSIGNED', color: 'border-blue-300 bg-blue-50' },
-  { id: 'in_progress', title: 'IN PROGRESS', color: 'border-yellow-300 bg-yellow-50' },
-  { id: 'review', title: 'REVIEW', color: 'border-purple-300 bg-purple-50' },
-  { id: 'done', title: 'DONE', color: 'border-green-300 bg-green-50' },
+  { id: 'assigned', title: 'ASSIGNED', color: 'border-orange-300 bg-orange-50' },
+  { id: 'in_progress', title: 'IN PROGRESS', color: 'border-teal-300 bg-teal-50' },
+  { id: 'review', title: 'REVIEW', color: 'border-orange-300 bg-orange-50' },
+  { id: 'done', title: 'DONE', color: 'border-gray-300 bg-gray-50' },
 ];
 
 interface MissionQueueProps {
@@ -28,15 +28,15 @@ export default function MissionQueue({ onTaskClick }: MissionQueueProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent':
-        return 'bg-red-100 text-red-800 border-red-400';
+        return 'bg-red-50 text-red-700 border-red-200';
       case 'high':
-        return 'bg-orange-100 text-orange-800 border-orange-400';
+        return 'bg-orange-50 text-orange-700 border-orange-200';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-400';
+        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
       case 'low':
-        return 'bg-green-100 text-green-800 border-green-400';
+        return 'bg-green-50 text-green-700 border-green-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-400';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
@@ -92,14 +92,14 @@ export default function MissionQueue({ onTaskClick }: MissionQueueProps) {
       </div>
 
       {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto p-8">
-        <div className="flex gap-6 h-full min-w-max">
+      <div className="flex-1 overflow-x-auto p-3">
+        <div className="flex gap-2 h-full">
           {COLUMNS.map((column) => {
             const columnTasks = getTasksForColumn(column.id);
             return (
               <div
                 key={column.id}
-                className={`flex-shrink-0 w-96 rounded-xl border-2 ${column.color} flex flex-col shadow-sm`}
+                className={`flex-1 min-w-[180px] max-w-[240px] rounded-lg border-2 ${column.color} flex flex-col shadow-sm overflow-hidden`}
               >
                 {/* Column Header */}
                 <div className="p-5 border-b border-gray-200 bg-white rounded-t-xl">
@@ -119,43 +119,65 @@ export default function MissionQueue({ onTaskClick }: MissionQueueProps) {
                     <div
                       key={task._id}
                       onClick={() => onTaskClick?.(task._id)}
-                      className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-lg transition-all hover:border-blue-400 hover:-translate-y-0.5"
+                      className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-3 cursor-pointer hover:shadow-lg transition-all hover:border-blue-400 overflow-hidden"
                     >
                       {/* Task Title & Priority */}
-                      <div className="flex items-start justify-between mb-3">
-                        <h4 className="font-bold text-base text-gray-900 flex-1 pr-3 line-clamp-2 leading-snug">
+                      <div className="flex items-start justify-between mb-2 gap-2 min-w-0">
+                        <h4 className="font-bold text-sm text-gray-900 flex-1 pr-2 line-clamp-2 leading-snug overflow-hidden">
                           {task.title}
                         </h4>
-                        <span className={`text-sm px-2.5 py-1 rounded-md border-2 font-bold ${getPriorityColor(task.priority)} shadow-sm`}>
+                        <span className={`text-xs px-2 py-0.5 rounded-md border-2 font-bold ${getPriorityColor(task.priority)} shadow-sm flex-shrink-0`}>
                           {getPriorityLabel(task.priority)}
                         </span>
                       </div>
 
                       {/* Description */}
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed">
+                      <p className="text-xs text-gray-600 line-clamp-2 mb-2 leading-relaxed overflow-hidden break-words">
                         {task.description}
                       </p>
 
+                      {/* Tags - only show if task has tags */}
+                      {task.tags && task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2 w-full overflow-hidden">
+                          {task.tags.slice(0, 3).map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs font-medium truncate max-w-[80px]"
+                              title={tag}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                          {task.tags.length > 3 && (
+                            <span className="px-2 py-0.5 bg-gray-200 text-gray-500 rounded text-xs font-medium">
+                              +{task.tags.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       {/* Footer: Assignee & Time */}
-                      <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-100">
+                      <div className="flex flex-col gap-2 text-xs pt-2 border-t border-gray-100">
+                        {/* Assignee */}
                         {task.assignees && task.assignees.length > 0 && task.assignees[0] ? (
-                          <div className="flex items-center space-x-2">
-                            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-[10px] font-medium text-white flex-shrink-0">
                               {getInitials(task.assignees[0].name)}
                             </div>
-                            <span className="text-gray-800 font-semibold truncate max-w-[140px]">
-                              {task.assignees[0].name.split(' ')[0]}
+                            <span className="text-xs text-gray-600 font-medium truncate">
+                              {task.assignees[0].name}
                             </span>
                           </div>
                         ) : (
-                          <div className="flex items-center space-x-2 text-gray-400">
-                            <User className="h-4 w-4" />
-                            <span className="font-medium">Unassigned</span>
+                          <div className="flex items-center gap-1.5 text-gray-400">
+                            <User className="h-3.5 w-3.5 flex-shrink-0" />
+                            <span className="font-medium text-xs">Unassigned</span>
                           </div>
                         )}
-                        <div className="flex items-center space-x-1.5 text-gray-500">
-                          <Clock className="h-3.5 w-3.5" />
-                          <span className="font-medium">{formatTimestamp(task.createdAt)}</span>
+                        {/* Timestamp */}
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <Clock className="h-3 w-3 flex-shrink-0" />
+                          <span className="font-medium text-xs">{formatTimestamp(task.createdAt)}</span>
                         </div>
                       </div>
                     </div>
