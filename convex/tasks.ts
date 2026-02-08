@@ -8,6 +8,7 @@ export const create = mutation({
     description: v.string(),
     priority: v.optional(v.string()),
     dueDate: v.optional(v.number()),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const taskId = await ctx.db.insert("tasks", {
@@ -19,6 +20,7 @@ export const create = mutation({
       createdAt: Date.now(),
       updatedAt: Date.now(),
       dueDate: args.dueDate,
+      tags: args.tags || [],
     });
 
     // Log activity
@@ -38,6 +40,7 @@ export const assign = mutation({
   args: {
     taskId: v.id("tasks"),
     agentIds: v.array(v.id("agents")),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const task = await ctx.db.get(args.taskId);
@@ -47,6 +50,7 @@ export const assign = mutation({
       assigneeIds: args.agentIds,
       status: "assigned",
       updatedAt: Date.now(),
+      tags: args.tags !== undefined ? args.tags : (task.tags || []),
     });
 
     // Create notifications for all assignees

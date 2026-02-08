@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { FileText } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
 
 interface StatsBarProps {
   onDocsClick?: () => void;
@@ -37,40 +38,44 @@ export default function StatsBar({ onDocsClick }: StatsBarProps) {
   const tasksInQueue = tasks?.filter(t => t.status !== 'done').length || 0;
 
   return (
-    <div className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between shadow-sm">
+    <div className="h-20 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-6 flex items-center justify-between shadow-sm">
       {/* Left: Title */}
-      <div className="flex items-center space-x-4">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">MISSION CONTROL</h1>
-        <span className="text-sm px-3 py-1 bg-blue-600 text-white rounded-md font-semibold">SiteGPT</span>
+      <div className="flex items-center gap-3">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">MISSION CONTROL</h1>
       </div>
 
-      {/* Center: Stats */}
-      <div className="flex items-center space-x-8">
-        <div className="flex items-center space-x-3">
-          <span className="text-gray-600 font-medium text-sm">AGENTS ACTIVE:</span>
-          <span className="text-2xl font-bold text-blue-600">{activeAgents}</span>
+      {/* Center: Large Stats Display */}
+      <div className="flex items-center gap-6">
+        <div className="text-center">
+          <div className="text-6xl font-bold text-gray-900 dark:text-gray-100">{activeAgents}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold mt-1">
+            Agents Active
+          </div>
         </div>
-        <div className="w-px h-8 bg-gray-300"></div>
-        <div className="flex items-center space-x-3">
-          <span className="text-gray-600 font-medium text-sm">TASKS IN QUEUE:</span>
-          <span className="text-2xl font-bold text-blue-600">{tasksInQueue}</span>
+        <div className="w-px h-10 bg-gray-200 dark:bg-slate-700"></div>
+        <div className="text-center">
+          <div className="text-6xl font-bold text-gray-900 dark:text-gray-100">{tasksInQueue}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-semibold mt-1">
+            Tasks in Queue
+          </div>
         </div>
       </div>
 
       {/* Right: Time & Actions */}
-      <div className="flex items-center space-x-6">
-        <div className="text-sm font-mono text-gray-600 font-medium">{currentTime}</div>
-        <div className="flex items-center space-x-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse"></div>
-          <span className="text-sm font-semibold text-green-600">ONLINE</span>
+      <div className="flex items-center gap-4">
+        <div className="text-xs font-mono text-gray-600 dark:text-gray-400 font-medium">{currentTime}</div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-2 w-2 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></div>
+          <span className="text-xs font-semibold text-green-600 dark:text-green-400">ONLINE</span>
         </div>
         <button
           onClick={onDocsClick}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-900 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-xs font-medium text-gray-900 dark:text-gray-100 transition-colors cursor-pointer"
         >
-          <FileText className="h-4 w-4" />
+          <FileText className="h-3.5 w-3.5" />
           <span>Docs</span>
         </button>
+        <ThemeToggle />
       </div>
     </div>
   );

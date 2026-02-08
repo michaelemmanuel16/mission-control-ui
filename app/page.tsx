@@ -12,6 +12,7 @@ import DocumentPanel from '@/components/DocumentPanel';
 export default function Home() {
   const [selectedTaskId, setSelectedTaskId] = useState<Id<'tasks'> | null>(null);
   const [showDocs, setShowDocs] = useState(false);
+  const [selectedAgentId, setSelectedAgentId] = useState<Id<'agents'> | null>(null);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -21,7 +22,10 @@ export default function Home() {
       {/* Main 3-Panel Layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Agents */}
-        <AgentSidebar />
+        <AgentSidebar
+          selectedAgentId={selectedAgentId}
+          onAgentClick={setSelectedAgentId}
+        />
 
         {/* Center Panel - Mission Queue */}
         <MissionQueue onTaskClick={setSelectedTaskId} />

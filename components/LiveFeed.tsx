@@ -19,17 +19,17 @@ export default function LiveFeed() {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'agent_heartbeat':
-        return <Heart className="h-5 w-5 text-red-500" />;
+        return <Heart className="h-5 w-5 text-red-500 dark:text-red-400" />;
       case 'message_sent':
-        return <MessageSquare className="h-5 w-5 text-blue-500" />;
+        return <MessageSquare className="h-5 w-5 text-blue-500 dark:text-blue-400" />;
       case 'task_created':
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-green-500 dark:text-green-400" />;
       case 'task_assigned':
-        return <CheckCircle2 className="h-5 w-5 text-purple-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-purple-500 dark:text-purple-400" />;
       case 'task_status_changed':
-        return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+        return <AlertCircle className="h-5 w-5 text-yellow-500 dark:text-yellow-400" />;
       default:
-        return <CheckCircle2 className="h-5 w-5 text-gray-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -80,13 +80,13 @@ export default function LiveFeed() {
 
   if (!activities) {
     return (
-      <aside className="w-96 bg-white border-l border-gray-200 flex flex-col">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-gray-700">LIVE FEED</h2>
+      <aside className="w-64 bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-700 flex flex-col">
+        <div className="px-3 py-2 border-b border-gray-200 dark:border-slate-700">
+          <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">LIVE FEED</h2>
         </div>
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="animate-pulse bg-gray-100 h-24 rounded-lg"></div>
+            <div key={i} className="animate-pulse bg-gray-100 dark:bg-slate-800 h-24 rounded-lg"></div>
           ))}
         </div>
       </aside>
@@ -96,21 +96,21 @@ export default function LiveFeed() {
   const filteredActivities = filterActivities(activities);
 
   return (
-    <aside className="w-96 bg-white border-l border-gray-200 flex flex-col">
+    <aside className="w-64 bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-700 flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-gray-700 mb-4">LIVE FEED</h2>
-        
+      <div className="px-3 py-2 border-b border-gray-200 dark:border-slate-700">
+        <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">LIVE FEED</h2>
+
         {/* Filter Tabs */}
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 flex-wrap">
           {FILTER_TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveFilter(tab.id)}
-              className={`text-sm px-3 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
                 activeFilter === tab.id
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-gray-900 dark:bg-slate-700 text-white'
+                  : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
               }`}
             >
               {tab.label}
@@ -120,22 +120,22 @@ export default function LiveFeed() {
       </div>
 
       {/* Activity List */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {filteredActivities.length === 0 ? (
-          <div className="text-center text-gray-400 py-12 font-medium">
+          <div className="text-center text-gray-400 dark:text-gray-500 py-8 text-xs font-medium">
             No recent activity
           </div>
         ) : (
           filteredActivities.map((activity) => (
             <div
               key={activity._id}
-              className="p-4 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-all cursor-pointer hover:shadow-md hover:border-blue-300"
+              className="p-3 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg border border-gray-200 dark:border-slate-700 transition-all cursor-pointer hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600"
             >
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start gap-2">
                 {/* Avatar */}
                 {activity.agent && (
                   <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 dark:from-slate-600 dark:to-slate-800 flex items-center justify-center text-white font-bold text-xs shadow-md">
                       {getInitials(activity.agent.name)}
                     </div>
                   </div>
@@ -143,29 +143,29 @@ export default function LiveFeed() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-2">
-                    <p className="text-sm font-semibold text-gray-900 line-clamp-2 leading-snug flex-1">
+                  <div className="flex items-start justify-between mb-1.5">
+                    <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 leading-snug flex-1">
                       {activity.message}
                     </p>
-                    <div className="flex-shrink-0 ml-2">
+                    <div className="flex-shrink-0 ml-1.5">
                       {getActivityIcon(activity.type)}
                     </div>
                   </div>
-                  
+
                   {activity.agent && (
-                    <p className="text-sm text-gray-600 mb-2 font-medium">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1.5 font-medium">
                       by {activity.agent.name}
                     </p>
                   )}
 
-                  <div className="flex items-center space-x-2">
-                    <p className={`text-sm font-bold ${
-                      isLive(activity.createdAt) ? 'text-red-600' : 'text-gray-500'
+                  <div className="flex items-center gap-1.5">
+                    <p className={`text-xs font-bold ${
+                      isLive(activity.createdAt) ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
                     }`}>
                       {formatTimestamp(activity.createdAt)}
                     </p>
                     {isLive(activity.createdAt) && (
-                      <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse shadow-sm"></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-red-500 dark:bg-red-400 animate-pulse shadow-sm"></div>
                     )}
                   </div>
                 </div>

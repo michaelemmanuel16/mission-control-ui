@@ -43,6 +43,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
     dueDate: v.optional(v.number()),
+    tags: v.optional(v.array(v.string())),
   })
     .index("by_status", ["status"])
     .index("by_assignee", ["assigneeIds"]),
