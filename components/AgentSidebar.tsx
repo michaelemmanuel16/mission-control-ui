@@ -23,9 +23,9 @@ export default function AgentSidebar({ selectedAgentId, onAgentClick }: AgentSid
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-slate-400 dark:bg-slate-500';
+        return 'bg-green-500 dark:bg-green-400 animate-pulse';
       case 'idle':
-        return 'bg-zinc-400 dark:bg-zinc-500';
+        return 'bg-gray-400 dark:bg-gray-500';
       case 'blocked':
         return 'bg-red-400 dark:bg-red-500';
       default:
@@ -118,8 +118,14 @@ export default function AgentSidebar({ selectedAgentId, onAgentClick }: AgentSid
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className={`h-1.5 w-1.5 rounded-full ${getStatusColor(agent.status)}`}></div>
-                    <span className="text-[10px] text-gray-600 dark:text-gray-400 font-medium uppercase">
-                      {agent.status === 'active' ? 'WORKING' : 'IDLE'}
+                    <span className={`text-[10px] font-medium uppercase ${
+                      agent.status === 'active'
+                        ? 'text-green-600 dark:text-green-400'
+                        : agent.status === 'blocked'
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}>
+                      {agent.status === 'active' ? 'WORKING' : agent.status === 'blocked' ? 'BLOCKED' : 'IDLE'}
                     </span>
                   </div>
                 </div>

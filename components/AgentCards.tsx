@@ -23,16 +23,13 @@ export default function AgentCards() {
   }
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'idle':
-        return 'bg-green-100 text-green-800 border-green-300';
-      case 'working':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
-      case 'offline':
-        return 'bg-gray-100 text-gray-800 border-gray-300';
-      default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    if (status === 'active') {
+      return 'bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-200 animate-pulse';
     }
+    if (status === 'blocked') {
+      return 'bg-red-100 text-red-700 border-red-300 dark:bg-red-900 dark:text-red-200';
+    }
+    return 'bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-400';
   };
 
   const formatLastHeartbeat = (timestamp: number) => {
@@ -71,7 +68,7 @@ export default function AgentCards() {
                 <h3 className='font-semibold text-lg'>{agent.name}</h3>
               </div>
               <span className={'px-2 py-1 rounded-full text-xs font-medium border ' + getStatusColor(agent.status)}>
-                {agent.status}
+                {agent.status.toUpperCase()}
               </span>
             </div>
             <div className='space-y-2 text-sm'>
