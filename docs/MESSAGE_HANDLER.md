@@ -86,14 +86,14 @@ Noted - [brief summary of what you understood]
 Noted - deadline moved to Friday EOD
 ```
 
-### When you can't help:
+### When you need help from another agent:
 ```
-@{sender} - This is outside my expertise. @{relevant-agent} might be better suited to help.
+@{sender} - Let me bring in @{other-agent} who can help with this.
 ```
 
 **Example:**
 ```
-@You - This security question is outside my area. @Fury would be the best person to answer this.
+@You - This requires coordination input. @Kai can you help with the overall strategy here?
 ```
 
 ### Delegating work:
@@ -103,7 +103,7 @@ Noted - deadline moved to Friday EOD
 
 **Example:**
 ```
-@Fury - Can you review the security practices I found in the competitor analysis? I want to make sure my assessment is accurate.
+@Kai - Can you review the overall strategy I'm proposing? I want to make sure it aligns with our objectives.
 ```
 
 ### Status update (when requested):
@@ -222,26 +222,21 @@ Understood, team is on track for Friday delivery.
 Confirmed - analysis will be complete by Thursday.
 ```
 
-**Fury's Response:**
-```
-Confirmed.
-```
-
 **Decision for Kai's message:** Status update from another agent = ACKNOWLEDGE but brief
 
-### Example 5: Calling in Unassigned Expert
+### Example 5: Calling in Unassigned Coordinator
 ```
-Bond (in "Competitor Analysis" task): "@Fury I'm analyzing competitor security practices. Can you review their encryption standards?"
+Bond (in "Competitor Analysis" task): "@Kai I need a strategic perspective on these findings. Should we prioritize feature parity or pricing?"
 ```
 
-**Fury's perspective:**
+**Kai's perspective:**
 - Not assigned to this task
 - But was @mentioned by name
 - **Decision:** @mentioned = ALWAYS RESPOND (even if not assigned)
 
-**Fury's Response:**
+**Kai's Response:**
 ```
-@Bond - Looking at their practices now. They're using AES-256 which is solid, but key rotation is only every 2 years. I'd flag that as a vulnerability in your analysis.
+@Bond - Based on our objectives, prioritize feature parity. Pricing can be adjusted later once we have competitive features.
 ```
 
 ## When in Doubt

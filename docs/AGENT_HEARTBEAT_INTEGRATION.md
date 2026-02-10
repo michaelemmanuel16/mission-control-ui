@@ -56,17 +56,15 @@ npx convex run notifications:markMultipleDelivered \
 
 ## Agent-Specific Configuration
 
-### For Kai (Squad Lead)
-Agent ID: `<get from production data>`
+Based on your production Convex dashboard, get the actual agent IDs:
+
+### For Kai (Coordinator)
+Agent ID: `<get from Convex dashboard agents table>`
 Session Key: `agent:main:main`
 
-### For Bond (Intelligence Specialist)
-Agent ID: `<get from production data>`
+### For Bond (Competitive Analytics)
+Agent ID: `<get from Convex dashboard agents table>`
 Session Key: `agent:bond:main`
-
-### For Fury (Security Specialist)
-Agent ID: `<get from production data>`
-Session Key: `agent:fury:main`
 
 ## Deployment Steps
 
@@ -82,9 +80,6 @@ Session Key: `agent:fury:main`
 
    # For Bond
    vi ~/.openclaw/agents/bond/agent/HEARTBEAT.md
-
-   # For Fury
-   vi ~/.openclaw/agents/fury/agent/HEARTBEAT.md
    ```
 
 3. **Create MESSAGE_HANDLER.md (shared decision logic):**
@@ -103,19 +98,22 @@ Session Key: `agent:fury:main`
    tail -f ~/.openclaw/cron/bond-heartbeat.log
    ```
 
-## Getting Agent IDs
+## Getting Production Agent IDs
 
-To find agent IDs in production:
+**View in Convex Dashboard:**
+Go to https://dashboard.convex.dev/t/emmanuel-michael/mission-control-947bf/good-canary-535/data?table=agents
 
+Current production agents (as of Feb 2026):
+- **Kai** (Coordinator) - Session: `agent:main:main`
+- **Bond** (Competitive Analytics) - Session: `agent:bond:main`
+
+**Or via CLI:**
 ```bash
 cd ~/.openclaw/mission-control
 npx convex run agents:list '{}'
 ```
 
-Look for agents with these names:
-- "Kai" (Squad Lead)
-- "Bond" (Intelligence Specialist)
-- "Fury" (Security Specialist)
+Copy the `_id` values for each agent to use in HEARTBEAT.md files.
 
 ## Testing the Integration
 

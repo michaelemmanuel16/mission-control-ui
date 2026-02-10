@@ -97,17 +97,22 @@ This guide walks through the complete deployment of the @mention functionality f
 ssh akaniyenemichael01@100.118.28.4
 ```
 
-### Step 2: Get Agent IDs
+### Step 2: Get Production Agent IDs
 
+**View in Convex Dashboard:**
+Go to https://dashboard.convex.dev/t/emmanuel-michael/mission-control-947bf/good-canary-535/data?table=agents
+
+Current production agents:
+- **Kai** (Coordinator)
+- **Bond** (Competitive Analytics)
+
+Copy the `_id` field for each agent from the dashboard.
+
+**Or via CLI:**
 ```bash
 cd ~/.openclaw/mission-control
 npx convex run agents:list '{}'
 ```
-
-Note the IDs for:
-- Kai (Squad Lead)
-- Bond (Intelligence Specialist)
-- Fury (Security Specialist)
 
 ### Step 3: Create MESSAGE_HANDLER.md
 
@@ -127,11 +132,6 @@ vi ~/.openclaw/agents/main/agent/HEARTBEAT.md
 For Bond:
 ```bash
 vi ~/.openclaw/agents/bond/agent/HEARTBEAT.md
-```
-
-For Fury:
-```bash
-vi ~/.openclaw/agents/fury/agent/HEARTBEAT.md
 ```
 
 Add the section from `docs/AGENT_HEARTBEAT_INTEGRATION.md` to each file.
@@ -164,7 +164,6 @@ Verify:
 
 Once Bond test succeeds:
 - Update Kai's HEARTBEAT.md
-- Update Fury's HEARTBEAT.md
 - Monitor logs for 24 hours
 
 ### Step 8: Monitor & Verify
@@ -176,9 +175,6 @@ tail -f ~/.openclaw/cron/bond-heartbeat.log
 
 # Kai
 tail -f ~/.openclaw/cron/kai-heartbeat.log
-
-# Fury
-tail -f ~/.openclaw/cron/fury-heartbeat.log
 ```
 
 **Check for:**
@@ -205,23 +201,23 @@ tail -f ~/.openclaw/cron/fury-heartbeat.log
 ### Test 3: Broadcast Message
 - Human: "Team, status update please"
 - Wait for all heartbeats
-- ✅ Verify Kai responds (as lead)
-- ✅ Verify Bond and Fury acknowledge
+- ✅ Verify Kai responds (as coordinator)
+- ✅ Verify Bond acknowledges
 - ✅ Verify no infinite loop
 
-### Test 4: Calling in Unassigned Expert
+### Test 4: Calling in Unassigned Coordinator
 - Create task assigned to Bond only
-- Bond: "@Fury can you review this security practice?"
-- Wait for Fury's heartbeat
-- ✅ Verify Fury receives notification (even though not assigned)
-- ✅ Verify Fury responds
-- Bond: "@Fury thanks!"
-- ✅ Verify Fury doesn't respond to thanks (loop prevention)
+- Bond: "@Kai can you review the overall strategy?"
+- Wait for Kai's heartbeat
+- ✅ Verify Kai receives notification (even though not assigned)
+- ✅ Verify Kai responds
+- Bond: "@Kai thanks!"
+- ✅ Verify Kai doesn't respond to thanks (loop prevention)
 
 ### Test 5: Multiple Mentions
-- Human: "@Kai @Bond @Fury please review"
-- ✅ Verify all 3 agents get notifications
-- ✅ Verify all 3 respond or acknowledge
+- Human: "@Kai @Bond please review"
+- ✅ Verify both agents get notifications
+- ✅ Verify both respond or acknowledge
 
 ## Rollback Plan
 
