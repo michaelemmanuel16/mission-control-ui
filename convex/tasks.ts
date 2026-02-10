@@ -150,15 +150,43 @@ export const get = query({
     if (!task) {
       throw new Error("Task not found");
     }
-    
+
     // Fetch assignees
     const assignees = await Promise.all(
       task.assigneeIds.map((id) => ctx.db.get(id))
     );
-    
+
     return {
       ...task,
       assignees,
     };
+  },
+});
+
+// Get tasks assigned to a specific agent
+export const getMyTasks = query({
+  args: {
+    agentId: v.id("agents"),
+    statuses: v.optional(v.array(v.string()))
+  },
+  handler: async (ctx, args) => {
+    const statuses = args.statuses || ["assigned", "in_progress"];
+
+    // Query all tasks and filter for this agent
+    const allTasks = await ctx.db.query("tasks").collect();
+    const myTasks = allTasks.filter(task =>
+      task.assigneeIds.includes(args.agentId) &&
+      statuses.includes(task.status)
+    );
+
+    // Populate assignee details
+    return Promise.all(
+      myTasks.map(async (task) => ({
+        ...task,
+        assignees: await Promise.all(
+          task.assigneeIds.map((id) => ctx.db.get(id))
+        ),
+      }))
+    );
   },
 });

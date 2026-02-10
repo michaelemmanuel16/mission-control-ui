@@ -92,6 +92,35 @@ export const removeAgent = mutation({
   },
 });
 
+// Get or create the special human operator agent
+export const getOrCreateHumanOperator = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const sessionKey = "system:human:operator";
+
+    // Check if human operator already exists
+    const existing = await ctx.db
+      .query("agents")
+      .withIndex("by_session", (q) => q.eq("sessionKey", sessionKey))
+      .first();
+
+    if (existing) {
+      return existing._id;
+    }
+
+    // Create human operator agent
+    const agentId = await ctx.db.insert("agents", {
+      name: "You",
+      role: "Human Operator",
+      status: "active",
+      sessionKey: sessionKey,
+      lastHeartbeat: Date.now(),
+    });
+
+    return agentId;
+  },
+});
+
 // Get all agents
 export const list = query({
   handler: async (ctx) => {

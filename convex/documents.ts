@@ -22,6 +22,7 @@ export const upload = mutation({
       v.literal("draft")
     ),
     taskId: v.optional(v.id("tasks")),
+    agentId: v.id("agents"),
   },
   handler: async (ctx, args) => {
     const documentId = await ctx.db.insert("documents", {
@@ -29,7 +30,7 @@ export const upload = mutation({
       content: args.content,
       type: args.type,
       taskId: args.taskId,
-      agentId: "agent:main:main" as any, // TODO: Get from context
+      agentId: args.agentId,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
