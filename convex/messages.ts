@@ -102,7 +102,7 @@ export const createWithMentions = mutation({
     notifyAgentIds.delete(args.fromAgentId);
 
     // 6. Create notifications for all recipients
-    for (const agentId of notifyAgentIds) {
+    for (const agentId of Array.from(notifyAgentIds)) {
       await ctx.db.insert("notifications", {
         mentionedAgentId: agentId,
         taskId: args.taskId,
