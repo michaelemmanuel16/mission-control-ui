@@ -17,7 +17,7 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
   const task = useQuery(api.tasks.get, taskId ? { taskId } : 'skip');
   const messages = useQuery(api.messages.byTask, taskId ? { taskId } : 'skip');
   const updateStatus = useMutation(api.tasks.updateStatus);
-  const createMessage = useMutation(api.messages.create);
+  const createMessageWithMentions = useMutation(api.messages.createWithMentions);
   const getHumanOperator = useMutation(api.agents.getOrCreateHumanOperator);
 
   if (!taskId || !task) return null;
@@ -33,10 +33,11 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
       // Get or create the human operator agent
       const humanOperatorId = await getHumanOperator({});
 
-      await createMessage({
+      await createMessageWithMentions({
         taskId: task._id,
         fromAgentId: humanOperatorId,
         content: newMessage.trim(),
+        // parentMessageId: undefined,  // Future: support replying to specific messages
       });
 
       setNewMessage(''); // Clear input on success

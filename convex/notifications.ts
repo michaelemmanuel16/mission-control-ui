@@ -26,3 +26,19 @@ export const markDelivered = mutation({
     });
   },
 });
+
+// Batch mark notifications as delivered
+export const markMultipleDelivered = mutation({
+  args: {
+    notificationIds: v.array(v.id("notifications")),
+  },
+  handler: async (ctx, args) => {
+    const deliveredAt = Date.now();
+    await Promise.all(
+      args.notificationIds.map(id =>
+        ctx.db.patch(id, { delivered: true, deliveredAt })
+      )
+    );
+    return args.notificationIds.length;
+  },
+});

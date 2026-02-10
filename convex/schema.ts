@@ -17,6 +17,7 @@ export default defineSchema({
     currentTaskId: v.optional(v.id("tasks")),
     sessionKey: v.string(),        // "agent:main:main", "agent:bond:main", "agent:fury:main"
     lastHeartbeat: v.optional(v.number()),  // Unix timestamp
+    lastMessageCheckAt: v.optional(v.number()),  // Track when agent last checked messages
   })
     .index("by_status", ["status"])
     .index("by_session", ["sessionKey"]),
@@ -54,10 +55,14 @@ export default defineSchema({
     fromAgentId: v.id("agents"),
     content: v.string(),
     attachments: v.optional(v.array(v.id("documents"))),
+    mentionedAgentIds: v.optional(v.array(v.id("agents"))),  // Parsed @mentions
+    parentMessageId: v.optional(v.id("messages")),  // For threading replies
     createdAt: v.number(),
   })
     .index("by_task", ["taskId"])
-    .index("by_agent", ["fromAgentId"]),
+    .index("by_agent", ["fromAgentId"])
+    .index("by_mentioned", ["mentionedAgentIds"]),  // Query messages mentioning agent
+
 
   // Activities table - real-time activity feed
   activities: defineTable({
