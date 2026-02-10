@@ -4,6 +4,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { Clock, User } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 const COLUMNS = [
   { id: 'inbox', title: 'INBOX', color: 'border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900' },
@@ -132,9 +133,11 @@ export default function MissionQueue({ onTaskClick }: MissionQueueProps) {
                       </div>
 
                       {/* Description */}
-                      <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mb-2 leading-relaxed overflow-hidden break-words">
-                        {task.description}
-                      </p>
+                      <MarkdownRenderer
+                        content={task.description}
+                        enableLineClamp={true}
+                        className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed"
+                      />
 
                       {/* Tags - only show if task has tags */}
                       {task.tags && task.tags.length > 0 && (

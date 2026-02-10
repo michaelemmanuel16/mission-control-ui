@@ -5,6 +5,7 @@ import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { X, Send, Clock, User } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 interface DetailViewProps {
   taskId: Id<'tasks'> | null;
@@ -89,7 +90,10 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
         <div className='flex-1 overflow-y-auto p-4 space-y-4'>
           <div>
             <h3 className='font-medium text-sm text-gray-700 dark:text-gray-300 mb-2'>Description</h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>{task.description}</p>
+            <MarkdownRenderer
+              content={task.description}
+              className='text-sm text-gray-600 dark:text-gray-400'
+            />
           </div>
 
           {task.assignees && task.assignees.length > 0 && task.assignees[0] && (
@@ -117,7 +121,10 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
                         <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
                       </div>
                     </div>
-                    <p className='text-sm text-gray-700 dark:text-gray-300'>{message.content}</p>
+                    <MarkdownRenderer
+                      content={message.content}
+                      className='text-sm text-gray-700 dark:text-gray-300'
+                    />
                   </div>
                 ))
               ) : (
