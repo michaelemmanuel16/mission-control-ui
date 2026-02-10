@@ -16,6 +16,8 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
   const task = useQuery(api.tasks.get, taskId ? { taskId } : 'skip');
   const messages = useQuery(api.messages.byTask, taskId ? { taskId } : 'skip');
   const updateStatus = useMutation(api.tasks.updateStatus);
+  const createMessage = useMutation(api.messages.create);
+  const getHumanOperator = useMutation(api.agents.getOrCreateHumanOperator);
 
   if (!taskId || !task) return null;
 
@@ -25,8 +27,23 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-    console.log('Sending message:', newMessage);
-    setNewMessage('');
+
+    try {
+      // Get or create the human operator agent
+      const humanOperatorId = await getHumanOperator({});
+
+      await createMessage({
+        taskId: task._id,
+        fromAgentId: humanOperatorId,
+        content: newMessage.trim(),
+      });
+
+      setNewMessage(''); // Clear input on success
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      alert("Failed to send message. Please try again.");
+      // Keep message in input for retry
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -92,7 +109,9 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
                 messages.map((message) => (
                   <div key={message._id} className='bg-gray-50 dark:bg-slate-800 rounded-lg p-3'>
                     <div className='flex items-center justify-between mb-1'>
-                      <span className='font-medium text-sm text-gray-900 dark:text-gray-100'>{String(message.fromAgentId)}</span>
+                      <span className='font-medium text-sm text-gray-900 dark:text-gray-100'>
+                        {message.fromAgent?.name || String(message.fromAgentId)}
+                      </span>
                       <div className='flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400'>
                         <Clock className='h-3 w-3' />
                         <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
