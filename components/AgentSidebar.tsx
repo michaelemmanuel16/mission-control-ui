@@ -202,36 +202,51 @@ export default function AgentSidebar({ selectedAgentId, onAgentClick }: AgentSid
         <div
           ref={popoverRef}
           style={{ top: popover.top, left: popover.left }}
-          className="fixed z-[9999] w-56 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-xl p-3"
+          className="fixed z-[9999] w-72 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
         >
           {/* Arrow */}
-          <div className="absolute -left-1.5 top-3 w-3 h-3 bg-white dark:bg-slate-800 border-l border-b border-gray-200 dark:border-slate-600 rotate-45" />
+          <div className="absolute -left-1.5 top-4 w-3 h-3 bg-white dark:bg-slate-800 border-l border-b border-gray-200 dark:border-slate-600 rotate-45" />
 
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 dark:from-slate-600 dark:to-slate-800 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+          {/* Header */}
+          <div className="flex items-center gap-3 p-4 pb-3">
+            <div className="h-11 w-11 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 dark:from-slate-500 dark:to-slate-700 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-sm">
               {getInitials(openAgent.name)}
             </div>
-            <div>
-              <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{openAgent.name}</div>
-              <span className={`text-[10px] px-1.5 py-0.5 rounded border font-semibold ${getRoleBadgeColor(getRoleBadge(openAgent.role))}`}>
-                {getRoleBadge(openAgent.role)}
-              </span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{openAgent.name}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded border font-semibold ${getRoleBadgeColor(getRoleBadge(openAgent.role))}`}>
+                  {getRoleBadge(openAgent.role)}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <div className={`h-1.5 w-1.5 rounded-full ${getStatusColor(openAgent.status)}`} />
+                <span className={`text-[11px] font-medium ${
+                  openAgent.status === 'active' ? 'text-green-600 dark:text-green-400' :
+                  openAgent.status === 'blocked' ? 'text-red-600 dark:text-red-400' :
+                  'text-gray-500 dark:text-gray-400'
+                }`}>
+                  {openAgent.status === 'active' ? 'Working' : openAgent.status === 'blocked' ? 'Blocked' : 'Idle'}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-1.5 text-xs">
-            <div>
-              <span className="text-gray-400 dark:text-gray-500 uppercase tracking-wide text-[10px]">Role</span>
-              <p className="text-gray-700 dark:text-gray-300 mt-0.5">{openAgent.role}</p>
-            </div>
-            <div>
-              <span className="text-gray-400 dark:text-gray-500 uppercase tracking-wide text-[10px]">Session</span>
-              <p className="text-gray-600 dark:text-gray-400 mt-0.5 font-mono text-[10px] break-all">{openAgent.sessionKey}</p>
-            </div>
-            <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-slate-700">
-              <span className="text-gray-400 dark:text-gray-500 uppercase tracking-wide text-[10px]">Last seen</span>
-              <span className="text-gray-600 dark:text-gray-400 text-[10px]">{lastSeen}</span>
-            </div>
+          {/* Bio */}
+          <div className="px-4 pb-3">
+            {openAgent.description ? (
+              <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                {openAgent.description}
+              </p>
+            ) : (
+              <p className="text-xs text-gray-400 dark:text-gray-500 italic">No description available.</p>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+            <span className="text-[11px] text-gray-500 dark:text-gray-400">{openAgent.role}</span>
+            <span className="text-[11px] text-gray-400 dark:text-gray-500">Last seen {lastSeen}</span>
           </div>
         </div>,
         document.body

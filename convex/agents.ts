@@ -7,6 +7,7 @@ export const register = mutation({
     name: v.string(),
     role: v.string(),
     sessionKey: v.string(),
+    description: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -23,9 +24,27 @@ export const register = mutation({
       role: args.role,
       status: "idle",
       sessionKey: args.sessionKey,
+      ...(args.description ? { description: args.description } : {}),
     });
 
     return agentId;
+  },
+});
+
+// Update agent description
+export const updateDescription = mutation({
+  args: {
+    sessionKey: v.string(),
+    description: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const agent = await ctx.db
+      .query("agents")
+      .withIndex("by_session", (q) => q.eq("sessionKey", args.sessionKey))
+      .first();
+    if (!agent) throw new Error("Agent not found");
+    await ctx.db.patch(agent._id, { description: args.description });
+    return agent._id;
   },
 });
 

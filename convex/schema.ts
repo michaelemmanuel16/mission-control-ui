@@ -18,6 +18,7 @@ export default defineSchema({
     sessionKey: v.string(),        // "agent:main:main", "agent:bond:main", "agent:fury:main"
     lastHeartbeat: v.optional(v.number()),  // Unix timestamp
     lastMessageCheckAt: v.optional(v.number()),  // Track when agent last checked messages
+    description: v.optional(v.string()),   // Who this agent is and what they do
   })
     .index("by_status", ["status"])
     .index("by_session", ["sessionKey"]),
