@@ -137,13 +137,18 @@ export default function DetailView({ taskId, onClose }: DetailViewProps) {
 
         <div className='border-t border-gray-200 dark:border-slate-700 p-4 space-y-3'>
           <div className='flex space-x-2'>
-            <input
-              type='text'
+            <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder='Type a message...'
-              className='flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400'
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              rows={1}
+              className='flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none'
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
             />
             <button
               onClick={handleSendMessage}

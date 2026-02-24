@@ -48,6 +48,23 @@ export const updateDescription = mutation({
   },
 });
 
+// Update agent role
+export const updateRole = mutation({
+  args: {
+    sessionKey: v.string(),
+    role: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const agent = await ctx.db
+      .query("agents")
+      .withIndex("by_session", (q) => q.eq("sessionKey", args.sessionKey))
+      .first();
+    if (!agent) throw new Error("Agent not found");
+    await ctx.db.patch(agent._id, { role: args.role });
+    return agent._id;
+  },
+});
+
 // Update agent heartbeat
 export const updateHeartbeat = mutation({
   args: {
@@ -140,10 +157,36 @@ export const getOrCreateHumanOperator = mutation({
   },
 });
 
-// Get all agents
+// Get all agents with derived working status from in_progress tasks
 export const list = query({
   handler: async (ctx) => {
     const agents = await ctx.db.query("agents").collect();
-    return agents;
+
+    // Single query for all in_progress tasks
+    const inProgressTasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_status", (q) => q.eq("status", "in_progress"))
+      .collect();
+
+    // Build a set of agent IDs who are actively working
+    const workingAgentIds = new Set(
+      inProgressTasks.flatMap((t) => t.assigneeIds.map((id) => id.toString()))
+    );
+
+    const STALE_MS = 5 * 60 * 1000; // 5 minutes
+    const now = Date.now();
+
+    return agents.map((agent) => {
+      const hasActiveTask = workingAgentIds.has(agent._id.toString());
+      const isAlive =
+        agent.lastHeartbeat && now - agent.lastHeartbeat < STALE_MS;
+
+      // WORKING: has an in_progress task AND sent a heartbeat in last 5 min
+      // Otherwise fall back to stored status
+      const effectiveStatus =
+        hasActiveTask && isAlive ? "active" : agent.status;
+
+      return { ...agent, status: effectiveStatus };
+    });
   },
 });
