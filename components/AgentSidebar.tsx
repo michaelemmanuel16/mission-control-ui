@@ -33,9 +33,17 @@ export default function AgentSidebar({ selectedAgentId, onAgentClick }: AgentSid
   }, [popover]);
 
   const getRoleBadge = (role: string) => {
+    const roleLower = role.toLowerCase();
+    // Marketing role slugs
+    if (roleLower === 'marketing-lead') return 'LEAD';
+    if (roleLower === 'creative-director') return 'CD';
+    if (roleLower === 'production-specialist') return 'PROD';
+    if (roleLower === 'performance-analyst') return 'PERF';
+    if (roleLower === 'market-intelligence') return 'INTEL';
+    // Legacy fallbacks
     const roleUpper = role.toUpperCase();
     if (roleUpper.includes('LEAD')) return 'LEAD';
-    if (roleUpper.includes('INT') || roleUpper.includes('INTEL')) return 'INT';
+    if (roleUpper.includes('INTEL') || roleUpper.includes('INT')) return 'INT';
     if (roleUpper.includes('SPEC') || roleUpper.includes('SPC')) return 'SPC';
     return 'AGT';
   };
@@ -56,7 +64,16 @@ export default function AgentSidebar({ selectedAgentId, onAgentClick }: AgentSid
   const getRoleBadgeColor = (badge: string) => {
     switch (badge) {
       case 'LEAD':
+        return 'bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800';
+      case 'CD':
         return 'bg-purple-100 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-800';
+      case 'PROD':
+        return 'bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800';
+      case 'PERF':
+        return 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400 border-green-300 dark:border-green-800';
+      case 'INTEL':
+        return 'bg-orange-100 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400 border-orange-300 dark:border-orange-800';
+      // Legacy badges
       case 'INT':
         return 'bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800';
       case 'SPC':
